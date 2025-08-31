@@ -400,6 +400,8 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           env:
+            - name: KEYCLOAK_IMPORT
+              value: /opt/bitnami/keycloak/data/master-realm.json
             - name: BITNAMI_DEBUG
               value: "false"
             - name: POSTGRESQL_PORT_NUMBER
