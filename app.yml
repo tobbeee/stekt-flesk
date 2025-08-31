@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/tobbeee/stekt-flesk.git
     targetRevision: main
-    path: manifest
+    path: manifests
   destination:
     server: https://kubernetes.default.svc
     namespace: default
