@@ -614,7 +614,7 @@ spec:
               cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/themes /emptydir/app-themes-dir
               info "Copy operation completed"
                 # Download master-realm.json from public repository
-                curl -L https://raw.githubusercontent.com/tobbeee/stekt-flesk/main/master-realm.json -o /opt/bitnami/keycloak/data/master-realm.json
+                curl -L https://raw.githubusercontent.com/tobbeee/stekt-flesk/main/master-realm.json -o /emptydir/app-data-dir/master-realm.json
           volumeMounts:
            - name: empty-dir
              mountPath: /emptydir
