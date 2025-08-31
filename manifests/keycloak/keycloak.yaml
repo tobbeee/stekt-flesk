@@ -1,3 +1,8 @@
+# Ensure namespace exists
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keycloak
 ---
 # Source: keycloak/charts/postgresql/templates/primary/networkpolicy.yaml
 kind: NetworkPolicy
