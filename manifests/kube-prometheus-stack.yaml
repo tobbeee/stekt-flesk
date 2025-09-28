@@ -3,6 +3,16 @@ kind: Namespace
 metadata:
   name: monitoring
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-admin-secret
+  namespace: monitoring
+type: Opaque
+stringData:
+  admin-user: admin
+  admin-password: {{ randAlphaNum 16 | quote }}
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -19,7 +29,10 @@ spec:
       values: |
         grafana:
           enabled: true
-          adminPassword: password
+          admin:
+            existingSecret:grafana-admin-secret
+            userKey: admin-user
+            passwordKey: admin-password
           service:
             type: LoadBalancer
         prometheus:
