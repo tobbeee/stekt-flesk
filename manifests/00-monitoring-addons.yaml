@@ -3,58 +3,21 @@ kind: Namespace
 metadata:
   name: monitoring
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: grafana-secret-generator
-  namespace: monitoring
+  name: monitoring
+  namespace: argocd
 spec:
-  template:
-    spec:
-      serviceAccountName: grafana-secret-sa
-      restartPolicy: Never
-      containers:
-        - name: secret-generator
-          image: bitnami/kubectl:latest
-          command:
-            - /bin/sh
-            - -c
-            - |
-              if ! kubectl get secret grafana-admin-credentials -n monitoring >/dev/null 2>&1; then
-                PASSWORD=$(openssl rand -base64 20)
-                kubectl create secret generic grafana-admin-credentials \
-                  -n monitoring \
-                  --from-literal=admin-user=admin \
-                  --from-literal=admin-password=$PASSWORD
-              else
-                echo "Secret already exists, skipping."
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: grafana-secret-sa
-  namespace: monitoring
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: grafana-secret-role
-  namespace: monitoring
-rules:
-  - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: ["get", "create", "update"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: grafana-secret-rolebinding
-  namespace: monitoring
-subjects:
-  - kind: ServiceAccount
-    name: grafana-secret-sa
+  project: default
+  source:
+    repoURL: https://github.com/tobbeee/stekt-flesk.git
+    targetRevision: main
+    path: manifests/monitoring
+  destination:
+    server: https://kubernetes.default.svc
     namespace: monitoring
-roleRef:
-  kind: Role
-  name: grafana-secret-role
-  apiGroup: rbac.authorization.k8s.io
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
