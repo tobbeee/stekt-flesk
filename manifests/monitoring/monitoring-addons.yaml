@@ -28,6 +28,8 @@ spec:
                   --from-literal=admin-password=$PASSWORD
               else
                 echo "Secret already exists, skipping."
+              fi
+
 ---
 apiVersion: v1
 kind: ServiceAccount
