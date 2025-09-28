@@ -1,3 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -11,7 +16,6 @@ spec:
     targetRevision: 55.5.0   # check latest
     helm:
       releaseName: monitoring
-      createNamespace: true
       values: |
         grafana:
           enabled: true
