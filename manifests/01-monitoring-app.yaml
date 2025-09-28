@@ -14,8 +14,10 @@ spec:
       values: |
         grafana:
           enabled: true
-          adminUser: admin
-          adminPassword: password
+          admin:
+            existingSecret: grafana-admin-credentials
+            userKey: admin-user
+            passwordKey: admin-password
           service:
             type: LoadBalancer
         prometheus:
