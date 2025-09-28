@@ -17,6 +17,7 @@ spec:
     helm:
       releaseName: monitoring
       values: |
+        installCRDs: true
         grafana:
           enabled: true
           admin:
