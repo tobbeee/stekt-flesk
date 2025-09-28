@@ -3,6 +3,17 @@ kind: Namespace
 metadata:
   name: monitoring
 ---
+# grafana-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-admin-secret
+  namespace: monitoring
+type: Opaque
+stringData:
+  admin-user: admin
+  admin-password: S3cureP@ssw0rd
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -35,30 +46,4 @@ spec:
     automated:
       prune: true
       selfHeal: true
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: grafana-secret-generator
-  namespace: monitoring
-spec:
-  template:
-    spec:
-      restartPolicy: Never
-      containers:
-        - name: secret-generator
-          image: bitnami/kubectl:latest
-          command:
-            - /bin/sh
-            - -c
-            - |
-              if ! kubectl get secret grafana-admin-credentials -n monitoring >/dev/null 2>&1; then
-                PASSWORD=$(openssl rand -base64 20)
-                kubectl create secret generic grafana-admin-credentials \
-                  -n monitoring \
-                  --from-literal=admin-user=admin \
-                  --from-literal=admin-password=$PASSWORD
-              else
-                echo "Secret already exists, skipping."
-              fi
 
