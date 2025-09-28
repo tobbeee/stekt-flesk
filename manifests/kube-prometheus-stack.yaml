@@ -7,7 +7,7 @@ metadata:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: grafana-admin-secret
+  name: grafana-admin-credentials
   namespace: monitoring
 type: Opaque
 stringData:
