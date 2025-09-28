@@ -11,6 +11,7 @@ spec:
     path: manifests/monitoring
   destination:
     server: https://kubernetes.default.svc
+    createNamespace: true
     namespace: monitoring
   syncPolicy:
     automated:
