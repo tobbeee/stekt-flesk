@@ -1,14 +1,13 @@
 #!/bin/bash
 set -e
-  
-# Delete old instance of minikube and start it
-minikube delete
+
+# Set up minikube
 minikube start
   
 # Create the Argo CD namespace
 kubectl create namespace argocd
   
-# Install or Argo CD
+# Install Argo CD
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
   
 # Wait for Argo CD to be ready
