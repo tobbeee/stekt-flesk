@@ -2,7 +2,7 @@
 set -e
   
 # Start Minikube if not already running
-minikube status >/dev/null 2>&1 || minikube start
+minikube start
   
 # Create the Argo CD namespace if it doesn't exist
 kubectl get ns argocd >/dev/null 2>&1 || kubectl create namespace argocd
