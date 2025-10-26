@@ -15,7 +15,7 @@ kubectl create namespace "$ARGO_CD"
 kubectl apply -n "$ARGO_CD" -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
   
 # Wait for Argo CD to be ready
-echo "Waiting for Argo CD pods to be ready..."
+echo "⏳ Waiting for Argo CD pods to be ready..."
 kubectl wait --for=condition=available --timeout=300s deployment/argocd-server -n "$ARGO_CD"
   
 # Apply Application manifest
@@ -37,6 +37,11 @@ for i in {1..15}; do
     exit 1
   fi
 done
+
+# Wait for keycloak to be ready
+echo "⏳ Waiting for Keycloak pods to be ready..."
+kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=keycloak -n "$KEYCLOAK" --timeout=300s
+echo "✅ Keycloak pods are ready!"
 
 echo "✅ Argo CD and keycloak are up!"
 
