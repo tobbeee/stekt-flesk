@@ -7,9 +7,16 @@ KEYCLOAK="keycloak"
 
 # Set up
 minikube start
+
+# Login to 1password CLI
+eval $(op signin)
   
 # Create the Argo CD namespace
 kubectl create namespace "$ARGO_CD"
+kubectl create namespace "$KEYCLOAK"
+
+kubectl create secret generic "$KEYCLOAK" -n "$KEYCLOAK" \
+  --from-literal=admin-password=$(op item get "Keycloak" --fields password --reveal)
   
 # Install Argo CD
 kubectl apply -n "$ARGO_CD" -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
@@ -28,6 +35,7 @@ echo "⏳ Waiting for namespace $KEYCLOAK to be created by Argo CD..."
 for i in {1..15}; do
   if kubectl get ns "$KEYCLOAK" &>/dev/null; then
     echo "✅ Namespace $KEYCLOAK exists."
+    sleep 10
     break
   fi
   echo "⏳ Namespace $KEYCLOAK not found yet... retrying in 20s"
