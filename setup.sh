@@ -17,7 +17,7 @@ kubectl create namespace "$KEYCLOAK"
 
 kubectl create secret generic "$KEYCLOAK" -n "$KEYCLOAK" \
   --from-literal=admin-password=$(op item get "Keycloak" --fields password --reveal)
-  
+
 # Install Argo CD
 kubectl apply -n "$ARGO_CD" -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
   
@@ -29,24 +29,8 @@ kubectl wait --for=condition=available --timeout=300s deployment/argocd-server -
 echo "Applying Argo CD Application..."
 kubectl apply -f https://raw.githubusercontent.com/tobbeee/stekt-flesk/main/app.yml
 
-# Wait for Argo CD to create the Keycloak namespace
-echo "⏳ Waiting for namespace $KEYCLOAK to be created by Argo CD..."
-# Wait until the namespace appears (max 5 min)
-for i in {1..15}; do
-  if kubectl get ns "$KEYCLOAK" &>/dev/null; then
-    echo "✅ Namespace $KEYCLOAK exists."
-    sleep 10
-    break
-  fi
-  echo "⏳ Namespace $KEYCLOAK not found yet... retrying in 20s"
-  sleep 20
-  if [ "$i" -eq 15 ]; then
-    echo "❌ Timed out waiting for namespace $KEYCLOAK to be created."
-    exit 1
-  fi
-done
-
 # Wait for keycloak to be ready
+sleep 15 # Give some time for keycloak deployment to start
 echo "⏳ Waiting for Keycloak pods to be ready..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=keycloak -n "$KEYCLOAK" --timeout=300s
 echo "✅ Keycloak pods are ready!"
